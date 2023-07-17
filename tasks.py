@@ -94,11 +94,10 @@ class FastFood(Restauraunt):
 
     def order(self, dish_name: str, quantity: int):
         if dish_name not in self.menu:
-            return KeyError('No such item in menu')
+            return 'No such item in menu'
         else:
             if self.menu[dish_name]['quantity'] < quantity:
-                return ValueError('Insufficient amount of item(s) in stock' +
-                                  f': {self.menu[dish_name]["quantity"]}')
+                return f'Insufficient amount of item(s) in stock: {self.menu[dish_name]["quantity"]}'
             else:
                 self.menu[dish_name]['quantity'] -= quantity
                 return self.menu[dish_name]['price'] * quantity
@@ -171,13 +170,13 @@ class Account:
         if amount > 0:
             self._balance += amount
         else:
-            raise ValueError('Amount must be positive')
+            raise 'Amount must be positive'
 
     def withdraw(self, amount):
         if amount > 0:
             self._balance -= amount
         else:
-            raise ValueError('Amount must be positive')
+            raise 'Amount must be positive'
 
     def get_balance(self):
         return self._balance
@@ -238,9 +237,9 @@ class Bank:
             if account_number not in self.get_account_numbers():
                 self._accounts.append(ACCOUNT_TYPES[account_type].create_account(account_number))
             else:
-                return ValueError('Given account number is already used')
+                return 'Given account number is already used'
         else:
-            return KeyError('Non-existing account type')
+            return 'Non-existing account type'
 
     def get_account_numbers(self):
         return {acc.get_account_number() for acc in self._accounts}
