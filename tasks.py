@@ -94,10 +94,10 @@ class FastFood(Restauraunt):
 
     def order(self, dish_name: str, quantity: int):
         if dish_name not in self.menu:
-            return 'No such item in menu'
+            raise KeyError('No such item in menu')
         else:
             if self.menu[dish_name]['quantity'] < quantity:
-                return f'Insufficient amount of item(s) in stock: {self.menu[dish_name]["quantity"]}'
+                raise ValueError(f'Insufficient amount of item(s) in stock: {self.menu[dish_name]["quantity"]}')
             else:
                 self.menu[dish_name]['quantity'] -= quantity
                 return self.menu[dish_name]['price'] * quantity
@@ -111,9 +111,20 @@ menu = {
 
 mc = FastFood('McDonalds', 'Fast Food', menu, True)
 
-print(mc.order('burger', 5))  # 25
-print(mc.order('burger', 15))  # Requested quantity not available
-print(mc.order('soup', 5))  # Dish not available
+try:
+    print(mc.order('burger', 5))  # 25
+except Exception as err:
+    print(err)
+
+try:
+    print(mc.order('burger', 15))  # Requested quantity not available
+except Exception as err:
+    print(err)
+
+try:
+    print(mc.order('soup', 5))  # Dish not available
+except Exception as err:
+    print(err)
 
 print('\n\n')
 
@@ -170,13 +181,13 @@ class Account:
         if amount > 0:
             self._balance += amount
         else:
-            raise 'Amount must be positive'
+            raise ValueError('Amount must be positive')
 
     def withdraw(self, amount):
         if amount > 0:
             self._balance -= amount
         else:
-            raise 'Amount must be positive'
+            raise ValueError('Amount must be positive')
 
     def get_balance(self):
         return self._balance
@@ -237,9 +248,9 @@ class Bank:
             if account_number not in self.get_account_numbers():
                 self._accounts.append(ACCOUNT_TYPES[account_type].create_account(account_number))
             else:
-                return 'Given account number is already used'
+                raise ValueError('Given account number is already used')
         else:
-            return 'Non-existing account type'
+            raise KeyError('Non-existing account type')
 
     def get_account_numbers(self):
         return {acc.get_account_number() for acc in self._accounts}
@@ -253,37 +264,40 @@ class Bank:
             acc.deposit(amount)
 
 
-acc_1 = Account(500., 1)
-acc_2 = Account.create_account(2)
-s_acc_1 = SavingsAccount(100., 3, 0.05)
-s_acc_2 = SavingsAccount.create_account(4)
-c_acc_1 = CurrentAccount(-10., 5, 3000.)
-c_acc_2 = CurrentAccount.create_account(6)
+try:
+    acc_1 = Account(500., 1)
+    acc_2 = Account.create_account(2)
+    s_acc_1 = SavingsAccount(100., 3, 0.05)
+    s_acc_2 = SavingsAccount.create_account(4)
+    c_acc_1 = CurrentAccount(-10., 5, 3000.)
+    c_acc_2 = CurrentAccount.create_account(6)
 
-bank = Bank([acc_1, acc_2, s_acc_1, s_acc_2, c_acc_1, c_acc_2])
+    bank = Bank([acc_1, acc_2, s_acc_1, s_acc_2, c_acc_1, c_acc_2])
 
-for acc in bank._accounts:
-    print(acc)
-print('\n')
+    for acc in bank._accounts:
+        print(acc)
+    print('\n')
 
-bank.update()
+    bank.update()
 
-bank.open_account('savings', 8)
+    bank.open_account('savings', 8)
 
-for acc in bank._accounts:
-    print(acc)
-print('\n')
+    for acc in bank._accounts:
+        print(acc)
+    print('\n')
 
-bank.close_account(8)
+    bank.close_account(8)
 
-for acc in bank._accounts:
-    print(acc)
-print('\n')
+    for acc in bank._accounts:
+        print(acc)
+    print('\n')
 
-bank.pay_dividends(200.)
+    bank.pay_dividends(200.)
 
-for acc in bank._accounts:
-    print(acc)
-print('\n')
+    for acc in bank._accounts:
+        print(acc)
+    print('\n')
 
-bank.update()
+    bank.update()
+except Exception as err:
+    print(err)
